@@ -10,6 +10,7 @@ const Home = () => {
   const [taskId, setTaskId] = useState(null);
   const [editTask, setEditTask] = useState("");
 
+
   const addTask = async () => {
     try {
       const res = await fetch(`http://localhost:4000/api/todo/createTodo`, {
@@ -33,6 +34,7 @@ const Home = () => {
     }
   };
 
+
   const getTask = async () => {
     try {
       const res = await fetch(`http://localhost:4000/api/todo/getTodos`, {
@@ -42,24 +44,28 @@ const Home = () => {
         },
       });
       const result = await res.json();
-      setTasks(result.data);
+      const sortedTasks = result.data.sort((a, b) => a.completed - b.completed);
+      setTasks(sortedTasks);
     } catch (error) {
       console.log(error);
     }
   };
-
   useEffect(() => {
     getTask();
   }, [token]);
 
+
   const deleteTask = async (id) => {
     try {
-      const res = await fetch(`http://localhost:4000/api/todo/deleteTodo/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
+      const res = await fetch(
+        `http://localhost:4000/api/todo/deleteTodo/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
       const data = await res.json();
       if (data.success) {
         toast.success(`Task deleted successfully`);
@@ -95,9 +101,35 @@ const Home = () => {
     setEditTask(text);
   };
 
+
   const cancelEdit = () => {
     setTaskId(null);
     setEditTask("");
+  };
+
+  const toggleCompletion = async (id, completed) => {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/todo/updateTodoCompletion/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({ completed: !completed }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`Task completion status updated`);
+        getTask();
+      } else {
+        toast.error(`Failed to update completion status`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -134,12 +166,21 @@ const Home = () => {
         </div>
         <ul className="space-y-4">
           {tasks.map((item, index) => {
-            const { _id, text } = item;
+            const { _id, text, completed } = item;
             return (
               <li
                 key={index}
-                className="flex items-center justify-between bg-gray-200 p-4 rounded-md shadow"
+                className={`flex items-center justify-between bg-gray-200 p-4 rounded-md shadow ${
+                  completed ? "line-through text-gray-500" : ""
+                }`}
               >
+                <input
+                  type="checkbox"
+                  checked={completed}
+                  onChange={() => toggleCompletion(_id, completed)}
+                  className="w-5 h-5 mr-2"
+                />
+
                 {taskId === _id ? (
                   <div className="flex-1 flex items-center space-x-2">
                     <input
