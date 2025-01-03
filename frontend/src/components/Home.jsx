@@ -13,7 +13,7 @@ const Home = () => {
 
   const addTask = async () => {
     try {
-      const res = await fetch(`https://todo-tawny-beta-13.vercel.app/api/todo/createTodo`, {
+      const res = await fetch(`http://localhost:4000/todo/createTodo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ const Home = () => {
 
   const getTask = async () => {
     try {
-      const res = await fetch(`https://todo-tawny-beta-13.vercel.app/api/todo/getTodos`, {
+      const res = await fetch(`http://localhost:4000/api/todo/getTodos`, {
         method: "GET",
         headers: {
           Authorization: `${token}`,
@@ -58,7 +58,7 @@ const Home = () => {
   const deleteTask = async (id) => {
     try {
       const res = await fetch(
-        `https://todo-tawny-beta-13.vercel.app/api/todo/deleteTodo/${id}`,
+        `http://localhost:4000/api/todo/deleteTodo/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -79,7 +79,7 @@ const Home = () => {
   };
 
   const updateTask = async (id, updateText) => {
-    const res = await fetch(`https://todo-tawny-beta-13.vercel.app/api/todo/updateTodo/${id}`, {
+    const res = await fetch(`http://localhost:4000/api/todo/updateTodo/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +110,7 @@ const Home = () => {
   const toggleCompletion = async (id, completed) => {
     try {
       const res = await fetch(
-        `https://todo-tawny-beta-13.vercel.app/api/todo/updateTodoCompletion/${id}`,
+        `http://localhost:4000/api/todo/updateTodoCompletion/${id}`,
         {
           method: "PATCH",
           headers: {

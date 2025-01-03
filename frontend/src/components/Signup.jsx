@@ -17,7 +17,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://todo-tawny-beta-13.vercel.app/api/signup`, {
+      const res = await fetch(`http://localhost:4000/api/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
